@@ -59,25 +59,27 @@ async function run (){
         app.put('/services/:id',async(req,res) => {
             const id = req.params.id;
             const updatedUser = req.body;
-            const options = { upsert: true };
-            console.log('hitting the put api');
-            const filter = {_id: ObjectId(id)}
+            console.log('hitting the api',updatedUser);
+
+            const filter = {_id: ObjectId(id)};
+            // const options = { upsert:true};
 
             const updateDoc = {
-                $set:{
+                $set: {
+                    img:updatedUser.IMG,
                     name:updatedUser.name,
-                    description:updatedUser.description,
-                    price:updatedUser.price
+                    price:updatedUser.price,
+                    description: updatedUser.description
                 },
-            }
-            const result = await servicesCollection.updateOne(filter, updatedUser, options);
+            };
+            const result = await servicesCollection.updateOne(filter, updateDoc);
+            console.log('result found',result);
             console.log(
                 `${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`,
-                res.json(result)
-                // sorry we can't find the url
             );
-        })
+            res.json(result);
 
+        })
 
     }
     finally{
